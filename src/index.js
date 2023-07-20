@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, webContents } = require("electron");
 const { join } = require("path");
 const UDPServer = require("./networking/UDPServer");
 
@@ -21,8 +21,17 @@ const createWindow = () => {
 
   	mainWindow.loadFile(join(__dirname, "index.html"));
 
-	let client = new UDPServer();
-	client.start();
+	
+
+	mainWindow.webContents.on('did-finish-load', function () {
+		let client = new UDPServer();
+		client.start();
+
+		client.on("pos", pos => {
+			console.log(pos)
+			mainWindow.webContents.send("pos", pos);
+		});
+	});
 };
 
 app.on("ready", createWindow);
@@ -34,4 +43,3 @@ app.on("window-all-closed", () => {
 app.on("activate", () => {
   	if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
-
