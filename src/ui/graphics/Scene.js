@@ -7,22 +7,23 @@ export class Scene {
         this.camera;
         this.controls;
         this.renderer;
+        this.resizeListener;
         this.tags = [];
     }
 
     init() {
+        const canvas = document.getElementById("canvas");
+
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(75, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000);
         
         this.renderer = new THREE.WebGLRenderer();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        window.addEventListener("resize", () => {
-            this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.resizeListener = () => {
+            this.camera.aspect = this.renderer.domElement.offsetWidth / this.renderer.domElement.offsetHeight;
             this.camera.updateProjectionMatrix();
-    
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
-        }, false);
-        document.body.appendChild(this.renderer.domElement);
+        }
+        window.addEventListener("resize", this.resizeListener, false);
+        canvas.appendChild(this.renderer.domElement);
 
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
