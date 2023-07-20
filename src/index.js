@@ -12,6 +12,7 @@ const createWindow = () => {
     	height: 600,
         autoHideMenuBar: true,
         resizable: true,
+		title: "Titan Dashboard",
     	webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
