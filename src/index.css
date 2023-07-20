@@ -1,0 +1,65 @@
+:root {
+    --dark-bg: #1f1f1f;
+    --dim-bg: #303030;
+    --light-bg: #3f3f3f;
+    --gutter: #131313;
+}
+
+body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+#canvas {
+    width: 100%;
+    height: 100%;
+}
+
+#canvas > canvas {
+    width: 100%;
+    height: 100%;
+}
+
+#window-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 4px 1fr 4px 1fr;
+    background-color: var(--dark-bg);
+}
+
+#window-container > div {
+    height: 100vh;
+}
+
+.row-gutter {
+    background-color: var(--gutter);
+    cursor: col-resize;
+    grid-row: 1/-1;
+}
+
+.col-gutter {
+    height: 100%;
+    background-color: var(--gutter);
+    cursor: row-resize;
+    grid-column: 1/-1;
+}
+
+.big-panel {
+    background-color: var(--dark-bg);
+}
+
+.big-panel > div {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr 4px 1fr;
+}
+
+.small-panel {
+    margin: 4px;
+    background-color: var(--dim-bg);
+    border-radius: 16px;
+    overflow: hidden;
+}
