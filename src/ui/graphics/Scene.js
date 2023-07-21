@@ -9,6 +9,7 @@ export class Scene {
         this.renderer;
         this.resizeListener;
         this.tags = [];
+        this.enabled = true;
     }
 
     init() {
@@ -52,8 +53,10 @@ export class Scene {
     }
 
     animate() {
-        requestAnimationFrame(() => {this.animate()});
-        this.controls.update();
-        this.renderer.render(this.scene, this.camera);
+        if (this.enabled) {
+            requestAnimationFrame(() => {this.animate()});
+            this.controls.update();
+            this.renderer.render(this.scene, this.camera);
+        }
     }
 }
