@@ -1,5 +1,5 @@
+import { Plotter } from "./graphics/Plotter.js";
 import { Scene } from "./graphics/Scene.js"
-//import Split from window.Split
 var ipcRenderer = require("electron").ipcRenderer;
 
 let scene = new Scene();
@@ -36,3 +36,16 @@ window.onload = () => {
         onDrag: () => {scene.resizeListener()}
     });
 }
+
+const viewCheck = document.getElementById("view-checkbox");
+viewCheck.addEventListener("change", () => {
+    if (viewCheck.checked) {
+        scene.enabled = true;
+        scene.animate();
+    } else {
+        scene.enabled = false;
+    }
+});
+
+let plotter = new Plotter();
+plotter.start();
