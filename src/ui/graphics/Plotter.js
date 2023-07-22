@@ -1,7 +1,7 @@
-//import Chart from "chart.js";
-//import ChartStreaming from "chartjs-plugin-streaming";
+const accent1 = getComputedStyle(document.body).getPropertyValue("--accent-1");
 
 Chart.register(ChartStreaming);
+Chart.defaults.color = accent1;
 
 export class Plotter {
     constructor() {
