@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="index.css">
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+            "three": "https://unpkg.com/three@v0.154.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@v0.154.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/split-grid/dist/split-grid.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.1/dist/chartjs-adapter-moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@1.27.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@2.0.0"></script>
+</head>
+<body>
+    <div id="window-container">
+        <div class="big-panel c1">
+            <div>
+                <div class="small-panel lr1">
+                    <div id="timer">02:35</div>
+                    <div id="connection-status">status: <b>disconnected</b></div>
+                </div>
+                <div class="col-gutter lr2"></div>
+                <div class="small-panel lr3">
+                    <div class="value">Variable 1: <b>"hello"</b></div>
+                    <div class="value">Variable 2: <b>123</b></div>
+                    <div class="value">Variable 3: <b>"hello"</b></div>
+                    <div class="value">Variable 4: <b>"hello"</b></div>
+                    <div class="value">Variable 5: <b>"hello"</b></div>
+                    <div class="value">Variable 6: <b>"hello"</b></div>
+                    <div class="value">Variable 7: <b>"hello"</b></div>
+                    <div class="value">Variable 8: <b>"hello"</b></div>
+                </div>
+            </div>
+        </div>
+        <div class="row-gutter c2" style="grid-column: 2;"></div>
+        <div class="big-panel c3">
+            <div>
+                <div class="small-panel mr1" id="gauge-panel">
+                    <div class="gauge-item">
+                        <label class="gauge-label">RoboRIO</label>
+                        <div class="gauge-container">
+                            <div id="rio-cpu-gauge" class="gauge">
+                                <div class="semi-circle"></div>
+                                <div class="semi-circle-mask" style="transform: rotate(130deg);"></div>
+                                <div class="gauge-value">CPU<br>50%</div>
+                            </div>
+                            <div id="rio-ram-gauge" class="gauge">
+                                <div class="semi-circle"></div>
+                                <div class="semi-circle-mask" style="transform: rotate(10deg);"></div>
+                                <div class="gauge-value">RAM<br>50%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gauge-item">
+                        <label class="gauge-label">Raspberry PI 3 B+</label>
+                        <div class="gauge-container">
+                            <div id="rpi-cpu-gauge" class="gauge">
+                                <div class="semi-circle"></div>
+                                <div class="semi-circle-mask" style="transform: rotate(30deg);"></div>
+                                <div class="gauge-value">CPU<br>50%</div>
+                            </div>
+                            <div id="rpi-ram-gauge" class="gauge">
+                                <div class="semi-circle"></div>
+                                <div class="semi-circle-mask" style="transform: rotate(150deg);"></div>
+                                <div class="gauge-value">RAM<br>50%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gauge-item">
+                        <label class="gauge-label">Jetson Nano</label>
+                        <div class="gauge-container">
+                            <div id="nano-cpu-gauge" class="gauge">
+                                <div class="semi-circle"></div>
+                                <div class="semi-circle-mask" style="transform: rotate(80deg);"></div>
+                                <div class="gauge-value">CPU<br>50%</div>
+                            </div>
+                            <div id="nano-ram-gauge" class="gauge">
+                                <div class="semi-circle"></div>
+                                <div class="semi-circle-mask" style="transform: rotate(160deg);"></div>
+                                <div class="gauge-value">RAM<br>50%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-gutter mr2"></div>
+                <div class="small-panel mr3">
+                    <div class="checkbox-box">
+                        <div class="checkbox-container">
+                            <input id="orientation-checkbox" class="checkbox" type="checkbox"><label class="checkbox-label" for="orientation-checkbox">field oriented</label><br>
+                            <input id="v1-checkbox" class="checkbox" type="checkbox"><label class="checkbox-label" for="v1-checkbox">variable</label><br>
+                            <input id="v2-checkbox" class="checkbox" type="checkbox"><label class="checkbox-label" for="v2-checkbox">variable</label><br>
+                            <input id="v3-checkbox" class="checkbox" type="checkbox"><label class="checkbox-label" for="v3-checkbox">variable</label><br>
+                            <input id="v4-checkbox" class="checkbox" type="checkbox"><label class="checkbox-label" for="v4-checkbox">variable</label><br>
+                            <input id="v5-checkbox" class="checkbox" type="checkbox"><label class="checkbox-label" for="v5-checkbox">variable</label><br>
+                        </div>
+                        <div class="checkbox-container">
+                            <input id="orientation-checkbox" class="checkbox" type="checkbox"><label class="checkbox-label" for="orientation-checkbox">field oriented</label><br>
+                            <input id="v6-checkbox" class="checkbox" type="checkbox"><label class="checkbox-label" for="v6-checkbox">variable</label><br>
+                            <input id="v7-checkbox" class="checkbox" type="checkbox"><label class="checkbox-label" for="v7-checkbox">variable</label><br>
+                            <input id="v8-checkbox" class="checkbox" type="checkbox"><label class="checkbox-label" for="v8-checkbox">variable</label><br>
+                            <input id="v9-checkbox" class="checkbox" type="checkbox"><label class="checkbox-label" for="v9-checkbox">variable</label><br>
+                            <input id="v10-checkbox" class="checkbox" type="checkbox"><label class="checkbox-label" for="v10-checkbox">variable</label><br>
+                        </div>
+                    </div>
+                    <label class="slider-label">Translation speed</label>
+                    <input id="speed-slider" class="slider" type="range" min="1" max="100" value="50">
+                    <label class="slider-label">Rotation speed</label>
+                    <input id="rot-speed-slider" class="slider" type="range" min="1" max="100" value="50">
+                </div>
+            </div>
+        </div>
+        <div class="row-gutter c4" style="grid-column: 4;"></div>
+        <div class="big-panel c5">
+            <div>
+                <div class="small-panel rr1">
+                    <div id="canvas"></div>
+                    <input id="view-checkbox" class="checkbox" type="checkbox" value="test" checked><label class="checkbox-label" for="view-checkbox">enable rendering</label>
+                </div>
+                <div class="col-gutter rr2"></div>
+                <div class="small-panel rr3">
+                    <canvas id="plot1"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="ui/index.js" type="module"></script>
+</body>
