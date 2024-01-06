@@ -29,8 +29,16 @@ const createWindow = () => {
 		client.start();
 
 		client.on("pos", pos => {
-			console.log(pos)
 			mainWindow.webContents.send("pos", pos);
+			console.log(pos)
+		});
+
+		client.on("rot", rot => {
+			mainWindow.webContents.send("rot", rot);
+		});
+
+		client.on("test", test => {
+			mainWindow.webContents.send("test", test);
 		});
 	});
 };

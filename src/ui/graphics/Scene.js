@@ -2,7 +2,9 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 export class Scene {
-    constructor() {
+    constructor(apriltags) {
+        this.apriltags = apriltags;
+
         this.scene;
         this.camera;
         this.controls;
@@ -12,11 +14,15 @@ export class Scene {
         this.enabled = true;
     }
 
+    toRad(deg) {
+        return [deg[0] / 180 * Math.PI, deg[1] / 180 * Math.PI, deg[2] / 180 * Math.PI]
+    }
+    
     init() {
         const canvas = document.getElementById("canvas");
 
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(54.4, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000); // Approx. 35mm
         
         this.renderer = new THREE.WebGLRenderer();
         this.resizeListener = () => {
@@ -28,24 +34,35 @@ export class Scene {
 
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
-        const robotGeom = new THREE.BoxGeometry(0.2, 0.2, 0.05);
+        const robotGeom = new THREE.BoxGeometry(0.05, 0.04, 0.02);
         const robotMat = new THREE.MeshBasicMaterial({color: 0x00ff00});
         this.robot = new THREE.Mesh(robotGeom, robotMat);
         this.scene.add(this.robot);
 
-        for (let i = 0; i < 1; i++) {
-            const tagGeom = new THREE.BoxGeometry(0.2, 0.2, 0.05);
-            const tagMat = new THREE.MeshBasicMaterial({color: 0xff0000});
-            const tag = new THREE.Mesh(tagGeom, tagMat);
-            this.tags.push(tag);
-            this.scene.add(this.tags.at(-1));
-        }
+        this.apriltags.forEach(tag => {
+            let newRot = this.toRad(tag.rotation)
 
-        const t1 = new THREE.BoxGeometry(0.2, 0.05, 0.05);
-        const t2 = new THREE.MeshBasicMaterial({color: 0xffff00});
-        const t3 = new THREE.Mesh(t1, t2);
-        t3.position.y = 0.15;
-        this.scene.add(t3);
+            const tagGeom = new THREE.BoxGeometry(tag.size, tag.size, 0.01);
+            const tagMat = new THREE.MeshBasicMaterial({color: 0xff0000});
+            const tagMesh = new THREE.Mesh(tagGeom, tagMat);
+
+            tagMesh.position.set(tag.position[0], tag.position[1], tag.position[2]);
+            tagMesh.rotation.set(newRot[0], newRot[1], newRot[2]);
+            this.tags.push(tagMesh);
+            this.scene.add(this.tags.at(-1));
+
+
+            const tagNormalGeom = new THREE.BoxGeometry(0.02, 0.02, 0.2);
+            const tagNormalMat = new THREE.MeshBasicMaterial({color: 0xffff00});
+            const tagNormalMesh = new THREE.Mesh(tagNormalGeom, tagNormalMat);
+
+            tagNormalMesh.position.set(0, 0, 0.1);
+            tagNormalMesh.position.applyEuler(new THREE.Euler(newRot[0], newRot[1], newRot[2], "XYZ"));
+            tagNormalMesh.position.add(new THREE.Vector3(tag.position[0], tag.position[1], tag.position[2]));
+            tagNormalMesh.rotation.set(newRot[0], newRot[1], newRot[2]);
+
+            this.scene.add(tagNormalMesh);
+        });
 
         this.camera.position.z = 1;
 

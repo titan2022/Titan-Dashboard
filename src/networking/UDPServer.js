@@ -14,6 +14,7 @@ module.exports =  class UDPServer extends EventEmitter {
      * Starts UDP server
      */
     start() {
+        console.log("Starting server...");
         this.server = dgram.createSocket("udp4");
 
         this.server.bind(5800, () => {
@@ -25,6 +26,7 @@ module.exports =  class UDPServer extends EventEmitter {
         });
 
         this.server.on("message", (msg, info) => {
+            console.log(msg)
             this.handleData(msg);
         });
     }

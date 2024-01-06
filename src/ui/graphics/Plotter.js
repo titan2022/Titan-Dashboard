@@ -7,7 +7,8 @@ export class Plotter {
     constructor() {
         this.context;
         this.chart;
-        this.data = [];
+        this.y1 = 0;
+        this.y2 = 0;
     }
 
     start() {
@@ -17,10 +18,16 @@ export class Plotter {
             data: {
                 datasets: [
                     {
-                        label: "Dataset 1",
+                        label: "D1",
                         backgroundColor: "#3787ac",
                         borderColor: "#4ab1e0",
-                        data: this.data
+                        data: []
+                    },
+                    {
+                        label: "D2",
+                        backgroundColor: "#ac374e",
+                        borderColor: "#e04a68",
+                        data: []
                     }
                 ]
             },
@@ -34,15 +41,18 @@ export class Plotter {
                     x: {
                         type: "realtime",
                         realtime: {
-                            duration: 20000,
-                            refresh: 1000,
-                            delay: 2000,
+                            duration: 5000,
+                            refresh: 100,
+                            delay: 0,
                             onRefresh: c => {
-                                c.data.datasets.forEach(dataset => {
-                                    dataset.data.push({
-                                        x: Date.now(),
-                                        y: Math.random() * 100
-                                    });
+                                c.data.datasets[0].data.push({
+                                    x: Date.now(),
+                                    y: this.y1
+                                });
+
+                                c.data.datasets[1].data.push({
+                                    x: Date.now(),
+                                    y: this.y2
                                 });
                             }
                         }
@@ -62,8 +72,8 @@ export class Plotter {
 
 
         // test
-        setInterval(() => {
-            //this.data.push(Math.random() * 100);
-        }, 1000);
+        // setInterval(() => {
+        //     //this.data.push(Math.random() * 100);
+        // }, 1000);
     }
 }
