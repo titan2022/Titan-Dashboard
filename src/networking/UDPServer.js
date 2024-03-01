@@ -26,7 +26,7 @@ module.exports =  class UDPServer extends EventEmitter {
         });
 
         this.server.on("message", (msg, info) => {
-            console.log(msg)
+            // console.log(msg)
             this.handleData(msg);
         });
     }
@@ -35,19 +35,44 @@ module.exports =  class UDPServer extends EventEmitter {
         const type = String.fromCharCode(msg[0]);
         
         switch (type) {
-            case 'd':
+            case 'v':
                 this.handleVector(msg);
+                break;
+            case 'p':
+                this.handlePose(msg);
+                break;
+            case 't':
+                this.handleVector(msg);
+                break;
+            default:
                 break;
         }
     }
 
     handleVector(msg) {
-        const x = msg.readDoubleLE(8);
-        const y = msg.readDoubleLE(16);
-        const z = msg.readDoubleLE(24);
-        let name = msg.slice(40, msg.length);
+        let name = msg.slice(1, 16);
         name = name.toString().slice(0, name.indexOf("\n")).replace(/\W/g, "");
+        const x = msg.readDoubleLE(16);
+        const y = msg.readDoubleLE(24);
+        const z = msg.readDoubleLE(32);
         
         this.emit(name, [x, y, z]);
+    }
+
+    handlePose(msg) {
+        let name = msg.slice(1, 16);
+        name = name.toString().slice(0, name.indexOf("\n")).replace(/\W/g, "");
+        const x = msg.readDoubleLE(16);
+        const y = msg.readDoubleLE(24);
+        const z = msg.readDoubleLE(32);
+        const roll = msg.readDoubleLE(40);
+        const pitch = msg.readDoubleLE(48);
+        const yaw = msg.readDoubleLE(56);
+        
+        this.emit(name, [x, y, z], [roll, pitch, yaw]);
+    }
+
+    handleTag(msg) {
+
     }
 }
