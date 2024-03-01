@@ -28,17 +28,14 @@ const createWindow = () => {
 		let client = new UDPServer();
 		client.start();
 
-		client.on("pos", pos => {
-			mainWindow.webContents.send("pos", pos);
-			console.log(pos)
-		});
-
-		client.on("rot", rot => {
-			mainWindow.webContents.send("rot", rot);
-		});
-
-		client.on("test", test => {
-			mainWindow.webContents.send("test", test);
+		client.on("pose", (pos, rot) => {
+			// console.log(2, pos, rot)
+			try {
+				mainWindow.webContents.send("pos", pos);
+				mainWindow.webContents.send("rot", rot);
+			} catch (err) {
+				console.log(err);
+			}
 		});
 	});
 };
