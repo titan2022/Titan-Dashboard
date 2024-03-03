@@ -28,6 +28,18 @@ ipcRenderer.on("test", (event, test) => {
 });
 
 window.onload = () => {
+    const windowContainer = document.getElementById("window-container");
+    const grid1Style =  document.getElementById("grid1");
+    const grid2Style =  document.getElementById("grid2");
+    const grid3Style =  document.getElementById("grid3");
+
+    windowContainer.style["grid-template-columns"] = localStorage.getItem("windowStyle");
+    grid1Style.style["grid-template-rows"] = localStorage.getItem("grid1style");
+    grid2Style.style["grid-template-rows"] = localStorage.getItem("grid2style");
+    grid3Style.style["grid-template-rows"] = localStorage.getItem("grid3style");
+
+    scene.redrawFrame();
+
     window.Split({
         columnGutters: [{
             track: 1,
@@ -49,7 +61,15 @@ window.onload = () => {
             track: 1,
             element: document.querySelector(".rr2"),
         }],
-        onDrag: () => {scene.resizeListener()}
+        onDrag: () => {
+            scene.resizeListener()
+        },
+        onDragEnd: () => {
+            localStorage.setItem("windowStyle", windowContainer.style["grid-template-columns"]);
+            localStorage.setItem("grid1style", grid1Style.style["grid-template-rows"]);
+            localStorage.setItem("grid2style", grid2Style.style["grid-template-rows"]);
+            localStorage.setItem("grid3style", grid3Style.style["grid-template-rows"]);
+        }
     });
 }
 

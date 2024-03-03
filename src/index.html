@@ -20,28 +20,13 @@
 <body>
     <div id="window-container">
         <div class="big-panel c1">
-            <div>
+            <div id="grid1">
                 <div class="small-panel lr1">
                     <div id="timer">02:35</div>
                     <div id="connection-status">status: <b>disconnected</b></div>
                 </div>
                 <div class="col-gutter lr2"></div>
-                <div class="small-panel lr3">
-                    <div class="value">Variable 1: <b>"hello"</b></div>
-                    <div class="value">Variable 2: <b>123</b></div>
-                    <div class="value">Variable 3: <b>"hello"</b></div>
-                    <div class="value">Variable 4: <b>"hello"</b></div>
-                    <div class="value">Variable 5: <b>"hello"</b></div>
-                    <div class="value">Variable 6: <b>"hello"</b></div>
-                    <div class="value">Variable 7: <b>"hello"</b></div>
-                    <div class="value">Variable 8: <b>"hello"</b></div>
-                </div>
-            </div>
-        </div>
-        <div class="row-gutter c2" style="grid-column: 2;"></div>
-        <div class="big-panel c3">
-            <div>
-                <div class="small-panel mr1" id="gauge-panel">
+                <div class="small-panel lr3" id="gauge-panel">
                     <div class="gauge-item">
                         <label class="gauge-label">RoboRIO</label>
                         <div class="gauge-container">
@@ -88,6 +73,14 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="row-gutter c2" style="grid-column: 2;"></div>
+        <div class="big-panel c3">
+            <div id="grid2">
+                <div class="small-panel mr1">
+                    <video id="video" src="http://localhost:5802/stream.ogg" autoplay="autoplay" />
+                </div>
                 <div class="col-gutter mr2"></div>
                 <div class="small-panel mr3">
                     <div class="checkbox-box">
@@ -112,12 +105,22 @@
                     <input id="speed-slider" class="slider" type="range" min="1" max="100" value="50">
                     <label class="slider-label">Rotation speed</label>
                     <input id="rot-speed-slider" class="slider" type="range" min="1" max="100" value="50">
+                    <br>
+                    <br>
+                    <div class="value">Variable 1: <b>"hello"</b></div>
+                    <div class="value">Variable 2: <b>123</b></div>
+                    <div class="value">Variable 3: <b>"hello"</b></div>
+                    <div class="value">Variable 4: <b>"hello"</b></div>
+                    <div class="value">Variable 5: <b>"hello"</b></div>
+                    <div class="value">Variable 6: <b>"hello"</b></div>
+                    <div class="value">Variable 7: <b>"hello"</b></div>
+                    <div class="value">Variable 8: <b>"hello"</b></div>
                 </div>
             </div>
         </div>
         <div class="row-gutter c4" style="grid-column: 4;"></div>
         <div class="big-panel c5">
-            <div>
+            <div id="grid3">
                 <div class="small-panel rr1">
                     <div id="canvas"></div>
                     <input id="view-checkbox" class="checkbox" type="checkbox" value="test" checked><label class="checkbox-label" for="view-checkbox">enable rendering</label>

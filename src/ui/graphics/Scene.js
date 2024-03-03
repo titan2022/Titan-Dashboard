@@ -24,11 +24,10 @@ export class Scene {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(54.4, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000); // Approx. 35mm
         
-        this.renderer = new THREE.WebGLRenderer();
-        this.resizeListener = () => {
-            this.camera.aspect = this.renderer.domElement.offsetWidth / this.renderer.domElement.offsetHeight;
-            this.camera.updateProjectionMatrix();
-        }
+        this.renderer = new THREE.WebGLRenderer({
+            antialias: true
+        });
+        this.resizeListener = () => this.redrawFrame();
         window.addEventListener("resize", this.resizeListener, false);
         canvas.appendChild(this.renderer.domElement);
 
@@ -52,7 +51,7 @@ export class Scene {
             this.scene.add(this.tags.at(-1));
 
 
-            const tagNormalGeom = new THREE.BoxGeometry(0.02, 0.02, 0.2);
+            const tagNormalGeom = new THREE.BoxGeometry(0.005, 0.005, 0.2);
             const tagNormalMat = new THREE.MeshBasicMaterial({color: 0xffff00});
             const tagNormalMesh = new THREE.Mesh(tagNormalGeom, tagNormalMat);
 
@@ -67,6 +66,12 @@ export class Scene {
         this.camera.position.z = 1;
 
         this.animate();
+    }
+
+    redrawFrame() {
+        this.camera.aspect = this.renderer.domElement.offsetWidth / this.renderer.domElement.offsetHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(this.renderer.domElement.offsetWidth, this.renderer.domElement.offsetHeight, false);
     }
 
     animate() {
