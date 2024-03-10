@@ -1,25 +1,26 @@
 import { Plotter } from "./graphics/Plotter.js";
 import { Scene } from "./graphics/Scene.js";
-// import { apriltags } from "./config/apriltags.js";
-import apriltags from './config/apriltags.js';
+import config from './config/config.js';
 var ipcRenderer = require("electron").ipcRenderer;
 
-let scene = new Scene(apriltags);
+let scene = new Scene(config);
 scene.init();
 
 let plotter = new Plotter();
 plotter.start();
 
 ipcRenderer.on("pos", (event, pos) => {
-    scene.robot.position.x = pos[0]; // -
-    scene.robot.position.y = pos[1]; // -
-    scene.robot.position.z = pos[2];
+    // scene.robot.position.x = pos[0]; // -
+    // scene.robot.position.y = pos[1]; // -
+    // scene.robot.position.z = pos[2];
+    scene.moveBot(pos);
 });
 
 ipcRenderer.on("rot", (event, rot) => {
-    scene.robot.rotation.x = rot[0];
-    scene.robot.rotation.y = rot[1]; // -
-    scene.robot.rotation.z = rot[2];
+    // scene.robot.rotation.x = rot[0];
+    // scene.robot.rotation.y = rot[1]; // -
+    // scene.robot.rotation.z = rot[2];
+    scene.rotateBot(rot);
 });
 
 ipcRenderer.on("test", (event, test) => {
