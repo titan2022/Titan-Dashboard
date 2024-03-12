@@ -16,6 +16,13 @@ ipcRenderer.on("pos", (event, pos) => {
     scene.moveBot(pos);
 });
 
+ipcRenderer.on("prepos", (event, pos) => {
+    scene.prerobot.position.x = pos[0];
+    scene.prerobot.position.y = pos[1];
+    scene.prerobot.position.z = pos[2];
+});
+
+
 ipcRenderer.on("rot", (event, rot) => {
     // scene.robot.rotation.x = rot[0];
     // scene.robot.rotation.y = rot[1]; // -
