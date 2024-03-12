@@ -5,7 +5,7 @@ export class Scene {
     constructor(config) {
         this.apriltags = config.apriltags;
         this.cameras = config.cameras;
-        this.robotSize = [config.robot.width, config.robot.length];
+        this.robotSize = config.robot.size
 
         this.scene;
         this.camera;
@@ -36,14 +36,14 @@ export class Scene {
 
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
-        const robotGeom = new THREE.BoxGeometry(this.robotSize[0], 0.1, this.robotSize[1]);
+        const robotGeom = new THREE.BoxGeometry(this.robotSize[0], this.robotSize[1], this.robotSize[2]);
         const robotMat = new THREE.MeshBasicMaterial({color: 0x00ff00});
         this.robot = new THREE.Mesh(robotGeom, robotMat);
         this.scene.add(this.robot);
         
         this.cameras.forEach(cam => {
             const camGeom = new THREE.BoxGeometry(0.06, 0.06, 0.02);
-            const camMat = new THREE.MeshBasicMaterial({color: 0x0000ff});
+            const camMat = new THREE.MeshBasicMaterial({color: cam.color});
             const camMesh = new THREE.Mesh(camGeom, camMat);
             camMesh.position.set(cam.position[0], cam.position[1], cam.position[2]);
             let newRot = this.toRad(cam.rotation);
@@ -83,7 +83,8 @@ export class Scene {
     }
 
     moveBot(pos) {
-        const dpos = new THREE.Vector3(pos[0], pos[1], pos[2]).sub(this.robot.position);
+        // const dpos = new THREE.Vector3(pos[0], pos[1], pos[2]).sub(this.robot.position);
+        const dpos = new THREE.Vector3(pos[0], 0, pos[2]).sub(this.robot.position);
         this.robot.position.add(dpos);
         this.cameraObjs.forEach(camObj => {
             camObj.position.add(dpos);
@@ -91,30 +92,58 @@ export class Scene {
     }
 
     rotateBot(rot) {
-        this.robot.rotation.x = rot[0];
+        // this.robot.rotation.x = rot[0];
         this.robot.rotation.y = rot[1];
-        this.robot.rotation.z = rot[2];
+        // this.robot.rotation.z = rot[2];
 
         for (let i = 0; i < this.cameraObjs.length; i++) {
             const camObj = this.cameraObjs[i];
 
             camObj.position.set(0, 0, 0);
-            camObj.rotation.x = this.cameras[i].rotation[0];
+            // camObj.rotation.x = this.cameras[i].rotation[0];
             camObj.rotation.y = this.cameras[i].rotation[1];
-            camObj.rotation.z = this.cameras[i].rotation[2];
+            // camObj.rotation.z = this.cameras[i].rotation[2];
 
-            camObj.position.x = this.cameras[i].position[0];
+            // camObj.position.x = this.cameras[i].position[0];
             camObj.position.y = this.cameras[i].position[1];
-            camObj.position.z = this.cameras[i].position[2];
+            // camObj.position.z = this.cameras[i].position[2];
 
-            camObj.position.applyEuler(new THREE.Euler(rot[0], rot[1], rot[2], "XYZ"));
+            // camObj.position.applyEuler(new THREE.Euler(rot[0], rot[1], rot[2], "XYZ"));
+            camObj.position.applyEuler(new THREE.Euler(0, rot[1], 0, "XYZ"));
             camObj.position.add(this.robot.position);
 
-            camObj.rotation.x += rot[0];
+            // camObj.rotation.x += rot[0];
             camObj.rotation.y += rot[1];
-            camObj.rotation.z += rot[2];
+            // camObj.rotation.z += rot[2];
         }
     }
+
+    // rotateBot(rot) {
+    //     this.robot.rotation.x = rot[0];
+    //     this.robot.rotation.y = rot[1];
+    //     this.robot.rotation.z = rot[2];
+
+    //     for (let i = 0; i < this.cameraObjs.length; i++) {
+    //         const camObj = this.cameraObjs[i];
+
+    //         camObj.position.set(0, 0, 0);
+    //         camObj.rotation.x = this.cameras[i].rotation[0];
+    //         camObj.rotation.y = this.cameras[i].rotation[1];
+    //         camObj.rotation.z = this.cameras[i].rotation[2];
+
+    //         camObj.position.x = this.cameras[i].position[0];
+    //         camObj.position.y = this.cameras[i].position[1];
+    //         camObj.position.z = this.cameras[i].position[2];
+
+    //         camObj.position.applyEuler(new THREE.Euler(rot[0], rot[1], rot[2], "XYZ"));
+    //         camObj.position.applyEuler(new THREE.Euler(0, rot[1], 0, "XYZ"));
+    //         camObj.position.add(this.robot.position);
+
+    //         camObj.rotation.x += rot[0];
+    //         camObj.rotation.y += rot[1];
+    //         camObj.rotation.z += rot[2];
+    //     }
+    // }
 
     redrawFrame() {
         this.camera.aspect = this.renderer.domElement.offsetWidth / this.renderer.domElement.offsetHeight;
