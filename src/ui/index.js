@@ -10,6 +10,7 @@ let plotter = new Plotter();
 plotter.start();
 
 ipcRenderer.on("pos", (event, pos) => {
+    console.log("pos", pos)
     // scene.robot.position.x = pos[0]; // -
     // scene.robot.position.y = pos[1]; // -
     // scene.robot.position.z = pos[2];
@@ -17,6 +18,7 @@ ipcRenderer.on("pos", (event, pos) => {
 });
 
 ipcRenderer.on("prepos", (event, pos) => {
+    console.log("prepos", pos)
     scene.prerobot.position.x = pos[0];
     scene.prerobot.position.y = pos[1];
     scene.prerobot.position.z = pos[2];

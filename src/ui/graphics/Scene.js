@@ -89,7 +89,7 @@ export class Scene {
 
     moveBot(pos) {
         // const dpos = new THREE.Vector3(pos[0], pos[1], pos[2]).sub(this.robot.position);
-        const dpos = new THREE.Vector3(pos[0], 1.2, pos[2]).sub(this.robot.position);
+        const dpos = new THREE.Vector3(pos[0], 0, pos[2]).sub(this.robot.position);
         this.robot.position.add(dpos);
         // this.cameraObjs.forEach(camObj => {
         //     camObj.position.add(dpos);
