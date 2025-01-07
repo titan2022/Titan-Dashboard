@@ -3,6 +3,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 export class Scene {
     constructor(config) {
+        this.config = config;
         this.apriltags = config["apriltags"];
         this.cameras = config["cameras"];
 
@@ -22,6 +23,9 @@ export class Scene {
     init() {
         const canvas = document.getElementById("canvas");
 
+        // default material
+        const defaultMat = new THREE.MeshBasicMaterial({color: 0x404040});
+
         // Initiate scene and camera
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(54.4, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000); // Approx. 35mm
@@ -32,13 +36,12 @@ export class Scene {
         this.resizeListener = () => this.redrawFrame();
         window.addEventListener("resize", this.resizeListener, false);
         canvas.appendChild(this.renderer.domElement);
+        const textureLoader = new THREE.TextureLoader().setPath("img/");
 
         // Field floor
         const fieldGeom = new THREE.BoxGeometry(22.5552, 0.1, 9.144);
-        const fieldMat = new THREE.MeshBasicMaterial({color: 0x454545});
-        const fieldTexture = new THREE.TextureLoader().load("img/field.png");
-        fieldMat.map = fieldTexture;
-        const fieldMesh = new THREE.Mesh(fieldGeom, fieldMat);
+        const fieldMat = new THREE.MeshBasicMaterial({map: textureLoader.load("field.png")});
+        const fieldMesh = new THREE.Mesh(fieldGeom, [defaultMat, defaultMat, fieldMat, defaultMat, defaultMat, defaultMat]);
         fieldMesh.position.set(0, -0.05, 0);
         this.scene.add(fieldMesh);
 
@@ -47,7 +50,7 @@ export class Scene {
 
         // Robot object
         const robotGeom = new THREE.BoxGeometry(0.05, 0.04, 0.02);
-        const robotMat = new THREE.MeshBasicMaterial({color: 0x00ff00});
+        const robotMat = new THREE.MeshBasicMaterial();
         this.robot = new THREE.Mesh(robotGeom, robotMat);
         this.scene.add(this.robot);
 
@@ -57,10 +60,8 @@ export class Scene {
 
             // Tag mesh
             const tagGeom = new THREE.BoxGeometry(0.2159, 0.2794, 0.01);
-            const tagMat = new THREE.MeshBasicMaterial({color: 0xffffff});
-            const tagTexture = new THREE.TextureLoader().load(`img/apriltags/${tag.id}.png`);
-            tagMat.map = tagTexture;
-            const tagMesh = new THREE.Mesh(tagGeom, tagMat);
+            const tagMat = new THREE.MeshBasicMaterial({map: textureLoader.load(`apriltags/${tag.id}.png`)});
+            const tagMesh = new THREE.Mesh(tagGeom, [defaultMat, defaultMat, defaultMat, defaultMat, tagMat, defaultMat]);
 
             tagMesh.position.set(tag.position[0], tag.position[1], tag.position[2]);
             tagMesh.rotation.set(newRot[0], newRot[1], newRot[2]);
@@ -68,16 +69,18 @@ export class Scene {
             this.scene.add(this.tags.at(-1));
 
             // Normal visualization
-            const tagNormalGeom = new THREE.BoxGeometry(0.005, 0.005, 0.2);
-            const tagNormalMat = new THREE.MeshBasicMaterial({color: 0xffff00});
-            const tagNormalMesh = new THREE.Mesh(tagNormalGeom, tagNormalMat);
+            if (this.config["debugEnableTagNormals"]) {
+                const tagNormalGeom = new THREE.BoxGeometry(0.005, 0.005, 0.2);
+                const tagNormalMat = new THREE.MeshBasicMaterial({color: 0xffff00});
+                const tagNormalMesh = new THREE.Mesh(tagNormalGeom, tagNormalMat);
 
-            tagNormalMesh.position.set(0, 0, 0.1);
-            tagNormalMesh.position.applyEuler(new THREE.Euler(newRot[0], newRot[1], newRot[2], "XYZ"));
-            tagNormalMesh.position.add(new THREE.Vector3(tag.position[0], tag.position[1], tag.position[2]));
-            tagNormalMesh.rotation.set(newRot[0], newRot[1], newRot[2]);
+                tagNormalMesh.position.set(0, 0, 0.1);
+                tagNormalMesh.position.applyEuler(new THREE.Euler(newRot[0], newRot[1], newRot[2], "XYZ"));
+                tagNormalMesh.position.add(new THREE.Vector3(tag.position[0], tag.position[1], tag.position[2]));
+                tagNormalMesh.rotation.set(newRot[0], newRot[1], newRot[2]);
 
-            this.scene.add(tagNormalMesh);
+                this.scene.add(tagNormalMesh);
+            }
         });
 
         // Starting camera position

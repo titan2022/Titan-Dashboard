@@ -6,6 +6,7 @@ export default {
     "quadDecimate": 1,
     "quadSigma": 2,
     "decodeSharpening": 0.25,
+    "debugEnableTagNormals": false,
     "robot": {
         "size": [0.6092, 0.1, 0.6092]
     },
