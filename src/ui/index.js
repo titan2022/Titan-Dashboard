@@ -1,10 +1,9 @@
 import { Plotter } from "./graphics/Plotter.js";
 import { Scene } from "./graphics/Scene.js";
-// import { apriltags } from "./config/apriltags.js";
-import apriltags from './config/apriltags.js';
+import config from './config/config.js';
 var ipcRenderer = require("electron").ipcRenderer;
 
-let scene = new Scene(apriltags);
+let scene = new Scene(config);
 scene.init();
 
 let plotter = new Plotter();
