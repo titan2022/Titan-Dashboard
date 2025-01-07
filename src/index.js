@@ -29,10 +29,18 @@ const createWindow = () => {
 		client.start();
 
 		client.on("pose", (pos, rot) => {
-			// console.log(2, pos, rot)
 			try {
 				mainWindow.webContents.send("pos", pos);
 				mainWindow.webContents.send("rot", rot);
+			} catch (err) {
+				console.log(err);
+			}
+		});
+
+		client.on("prepose", (pos, rot) => {
+			try {
+				mainWindow.webContents.send("prepos", pos);
+				mainWindow.webContents.send("prerot", pos);
 			} catch (err) {
 				console.log(err);
 			}

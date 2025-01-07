@@ -17,7 +17,7 @@ module.exports =  class UDPServer extends EventEmitter {
         console.log("Starting server...");
         this.server = dgram.createSocket("udp4");
 
-        this.server.bind(5800, () => {
+        this.server.bind(5804, () => {
             console.log("Server binded");
         });
 
