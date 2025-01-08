@@ -1,10 +1,11 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import apriltags from "../config/apriltags.js";
 
 export class Scene {
     constructor(config) {
         this.config = config;
-        this.apriltags = config["apriltags"];
+        this.apriltags = apriltags;
         this.cameras = config["cameras"];
 
         this.scene;
@@ -55,16 +56,19 @@ export class Scene {
         this.scene.add(this.robot);
 
         // Apriltag objects
-        this.apriltags.forEach(tag => {
-            let newRot = this.toRad(tag.rotation)
+        this.apriltags.tags.forEach(tag => {
 
             // Tag mesh
             const tagGeom = new THREE.BoxGeometry(0.2159, 0.2794, 0.01);
-            const tagMat = new THREE.MeshBasicMaterial({map: textureLoader.load(`apriltags/${tag.id}.png`)});
+            const tagMat = new THREE.MeshBasicMaterial({map: textureLoader.load(`apriltags/${tag.ID}.png`)});
             const tagMesh = new THREE.Mesh(tagGeom, [defaultMat, defaultMat, defaultMat, defaultMat, tagMat, defaultMat]);
+            let qm = new THREE.Quaternion();
+            //let destRotation = new THREE.Quaternion(tag.pose.rotation.quaternion.X, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.Z,tag.pose.rotation.quaternion.W);
+            tagMesh.quaternion.set(tag.pose.rotation.quaternion.X, tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.Y,tag.pose.rotation.quaternion.W);
+            tagMesh.quaternion.normalize();
 
-            tagMesh.position.set(tag.position[0], tag.position[1], tag.position[2]);
-            tagMesh.rotation.set(newRot[0], newRot[1], newRot[2]);
+            tagMesh.position.set(tag.pose.translation.x-apriltags.field.length/2, tag.pose.translation.z, tag.pose.translation.y-apriltags.field.width/2);
+            //tagMesh..set(tag.pose.rotation.quaternion.W, tag.pose.rotation.quaternion.X, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.Z);
             this.tags.push(tagMesh);
             this.scene.add(this.tags.at(-1));
 
