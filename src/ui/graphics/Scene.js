@@ -64,7 +64,7 @@ export class Scene {
             const tagMesh = new THREE.Mesh(tagGeom, [defaultMat, defaultMat, defaultMat, defaultMat, tagMat, defaultMat]);
         
             let qm = new THREE.Quaternion();
-            let ninety = Math.PI / 2; 
+            let ninety = Math.PI/2; 
             
             tagMesh.quaternion.set(tag.pose.rotation.quaternion.W, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.X);
             tagMesh.quaternion.normalize();
