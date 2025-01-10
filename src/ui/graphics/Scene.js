@@ -69,21 +69,11 @@ export class Scene {
             tagMesh.quaternion.set(tag.pose.rotation.quaternion.W, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.X);
             tagMesh.quaternion.normalize();
         
-            let rotationQuat = null;
-
-            // 90-degree Y-axis rotation
-            rotationQuat = new THREE.Quaternion();
+            const rotationQuat = new THREE.Quaternion();
             rotationQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), ninety); 
-            tagMesh.quaternion.multiply(rotationQuat);
 
-            // Flip around the Z-axis to make it 
-            rotationQuat = new THREE.Quaternion();
-            rotationQuat.setFromAxisAngle(new THREE.Vector3(0, 0, 1), 2*ninety); 
             tagMesh.quaternion.multiply(rotationQuat);
-            
-            // tagMesh.position.set(tag.pose.translation.x-apriltags.field.length/2, tag.pose.translation.z, tag.pose.translation.y-apriltags.field.width/2);
-            tagMesh.position.set(tag.pose.translation.x-apriltags.field.length/2, tag.pose.translation.z, -(tag.pose.translation.y-apriltags.field.width/2));
-
+            tagMesh.position.set(tag.pose.translation.x-apriltags.field.length/2, tag.pose.translation.z, tag.pose.translation.y-apriltags.field.width/2);
             this.tags.push(tagMesh);
             this.scene.add(this.tags.at(-1));
 
