@@ -71,7 +71,7 @@ export class Scene {
         
             const rotationQuat = new THREE.Quaternion();
             rotationQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), ninety); 
-
+            rotationQuat.setFromAxisAngle(new THREE.Vector4(0, 1, 0, 0), ninety*3); 
             tagMesh.quaternion.multiply(rotationQuat);
             tagMesh.position.set(tag.pose.translation.x-apriltags.field.length/2, tag.pose.translation.z, tag.pose.translation.y-apriltags.field.width/2);
             this.tags.push(tagMesh);
