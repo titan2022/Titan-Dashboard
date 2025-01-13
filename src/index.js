@@ -2,14 +2,16 @@ const { app, BrowserWindow, webContents } = require("electron");
 const { join } = require("path");
 const UDPServer = require("./networking/UDPServer");
 
+const loadGenPage = false;
+
 if (require("electron-squirrel-startup")) {
   	app.quit();
 }
 
 const createWindow = () => {
   	const mainWindow = new BrowserWindow({
-    	width: 800,
-    	height: 600,
+    	width: !loadGenPage?800:1280,
+    	height: !loadGenPage?600:800,
         autoHideMenuBar: true,
         resizable: true,
 		title: "Titan Dashboard",
@@ -20,9 +22,11 @@ const createWindow = () => {
     	},
   	});
 
-  	mainWindow.loadFile(join(__dirname, "index.html"));
-
-	
+  	if (!loadGenPage){
+		mainWindow.loadFile(join(__dirname, "index.html"));
+	} else {
+		mainWindow.loadFile(join(__dirname, "gen/index.html"));
+	}
 
 	mainWindow.webContents.on('did-finish-load', function () {
 		let client = new UDPServer();

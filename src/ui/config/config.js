@@ -15,7 +15,8 @@ export default {
             "name": "Arducam",
             "usbName": "usb-Arducam_Technology_Co.__Ltd._Arducam_OV9281_USB_Camera_UC762-video-index0",
             "position": [0.2445512, 0.0842264, 0.2952496],
-            "rotation": [-50.5, -16.93, 0],
+            //x is up and down, y is left and right, z is rotate in terms of rotation (0,0,0)
+            "rotation": [0, 0, 0],
             "width": 1280,
             "height": 800,
             "fps": 100,
