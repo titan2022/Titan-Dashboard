@@ -33,7 +33,7 @@ export class Scene {
 
         // Initiate scene and camera
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(54.4, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000); // Approx. 35mm
+        this.camera = new THREE.PerspectiveCamera(48.1752761112, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000); // Approx. 35mm
         
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
