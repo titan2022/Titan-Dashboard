@@ -1,9 +1,9 @@
 const {writeFile} = require('fs')
-import { Scene } from "./graphics/Scene.js";
+import { Scene } from "../../ui/graphics/Scene.js";
 import config from '../../ui/config/config.js';
 
 let scene = new Scene(config);
-scene.init();
+scene.init(false);
 window.scene = scene;
 
 //PARAMETERS

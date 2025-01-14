@@ -20,8 +20,12 @@ export class Scene {
     toRad(deg) {
         return [deg[0] / 180 * Math.PI, deg[1] / 180 * Math.PI, deg[2] / 180 * Math.PI]
     }
+
+    toRadSingle(deg){
+        return deg/180*Math.PI;
+    }
     
-    init() {
+    init(enableOrbitControls = true) {
         const canvas = document.getElementById("canvas");
 
         // default material
@@ -32,14 +36,16 @@ export class Scene {
         this.camera = new THREE.PerspectiveCamera(54.4, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000); // Approx. 35mm
         
         this.renderer = new THREE.WebGLRenderer({
-            antialias: true
+            antialias: true,
+            preserveDrawingBuffer: true
         });
         this.resizeListener = () => this.redrawFrame();
         window.addEventListener("resize", this.resizeListener, false);
         canvas.appendChild(this.renderer.domElement);
-        const textureLoader = new THREE.TextureLoader().setPath("img/");
-
+        const textureLoader = enableOrbitControls?new THREE.TextureLoader().setPath("img/"):new THREE.TextureLoader().setPath("../img/");
+        this.redrawFrame();
         // Field floor
+        //1755 x 805 cm
         const fieldGeom = new THREE.BoxGeometry(22.5552, 0.1, 9.144);
         const fieldMat = new THREE.MeshBasicMaterial({map: textureLoader.load("field.png")});
         const fieldMesh = new THREE.Mesh(fieldGeom, [defaultMat, defaultMat, fieldMat, defaultMat, defaultMat, defaultMat]);
@@ -47,13 +53,19 @@ export class Scene {
         this.scene.add(fieldMesh);
 
         // Orbit camera
-        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        if (enableOrbitControls){
+            this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        } else {
+            this.controls = null;
+        }
 
         // Robot object
-        const robotGeom = new THREE.BoxGeometry(0.5, 0.5, 0.2);
-        const robotMat = new THREE.MeshBasicMaterial({color: 0xffff00});
-        this.robot = new THREE.Mesh(robotGeom, robotMat);
-        this.scene.add(this.robot);
+        if (this.controls){
+            const robotGeom = new THREE.BoxGeometry(0.5, 0.5, 0.2);
+            const robotMat = new THREE.MeshBasicMaterial({color: 0xffff00});
+            this.robot = new THREE.Mesh(robotGeom, robotMat);
+            this.scene.add(this.robot);
+        }
 
         // Apriltag objects
         this.apriltags.tags.forEach(tag => {
@@ -93,8 +105,8 @@ export class Scene {
         });
 
         // Starting camera position
-        this.camera.position.z = 1;
-
+        this.camera.position.z = 5;
+        this.camera.position.y = 2;
         this.animate();
     }
 
@@ -107,8 +119,23 @@ export class Scene {
     animate() {
         if (this.enabled) {
             requestAnimationFrame(() => {this.animate()});
-            this.controls.update();
+            if (this.controls){
+                this.controls.update();
+            }
             this.renderer.render(this.scene, this.camera);
         }
+    }
+
+    setCamPos = (x=0,y=0,z=0) => {
+        this.camera.position.x = x;
+        this.camera.position.z = z;
+        this.camera.position.y = y;
+        
+    }
+
+    setCamRot = (x=0,y=0,z=0) => {
+        this.camera.rotation.z = z;
+        this.camera.rotation.y = y;
+        this.camera.rotation.x = x;
     }
 }
