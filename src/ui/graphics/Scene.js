@@ -55,6 +55,10 @@ export class Scene {
         this.robot = new THREE.Mesh(robotGeom, robotMat);
         this.scene.add(this.robot);
 
+        // XYZ in corner
+        var axesHelper = new THREE.AxesHelper( 10 );
+        this.scene.add( axesHelper );
+
         // Apriltag objects
         this.apriltags.tags.forEach(tag => {
 
@@ -66,14 +70,24 @@ export class Scene {
             let qm = new THREE.Quaternion();
             let ninety = Math.PI/2; 
             
-            tagMesh.quaternion.set(tag.pose.rotation.quaternion.W, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.X);
+            tagMesh.quaternion.set(tag.pose.rotation.quaternion.X, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.W);
+            // tagMesh.quaternion.set(tag.pose.rotation.quaternion.X, -tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.W);
+            // tagMesh.quaternion.set(tag.pose.rotation.quaternion.W, -tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.X);
             tagMesh.quaternion.normalize();
         
             const rotationQuat = new THREE.Quaternion();
-            rotationQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), ninety); 
-            rotationQuat.setFromAxisAngle(new THREE.Vector4(0, 1, 0, 0), ninety*3); 
+            rotationQuat.setFromAxisAngle(new THREE.Vector3(1, 0, 0), ninety*3); 
             tagMesh.quaternion.multiply(rotationQuat);
-            tagMesh.position.set(tag.pose.translation.x-apriltags.field.length/2, tag.pose.translation.z, tag.pose.translation.y-apriltags.field.width/2);
+
+            tagMesh.quaternion.y = -tagMesh.quaternion.y;
+
+            rotationQuat.setFromAxisAngle(new THREE.Vector3(1, 0, 0), ninety); 
+            tagMesh.quaternion.multiply(rotationQuat);
+
+            rotationQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), ninety); 
+            tagMesh.quaternion.multiply(rotationQuat);
+
+            tagMesh.position.set(tag.pose.translation.x-apriltags.field.length/2, tag.pose.translation.z, -(tag.pose.translation.y-apriltags.field.width/2));
             this.tags.push(tagMesh);
             this.scene.add(this.tags.at(-1));
 
