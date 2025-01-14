@@ -2,7 +2,7 @@ const { app, BrowserWindow, webContents } = require("electron");
 const { join } = require("path");
 const UDPServer = require("./networking/UDPServer");
 
-const loadGenPage = true;
+const loadGenPage = false;
 
 if (require("electron-squirrel-startup")) {
 	app.quit();
