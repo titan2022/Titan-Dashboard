@@ -50,8 +50,8 @@ export class Scene {
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
         // Robot object
-        const robotGeom = new THREE.BoxGeometry(0.05, 0.04, 0.02);
-        const robotMat = new THREE.MeshBasicMaterial();
+        const robotGeom = new THREE.BoxGeometry(0.5, 0.5, 0.2);
+        const robotMat = new THREE.MeshBasicMaterial({color: 0xffff00});
         this.robot = new THREE.Mesh(robotGeom, robotMat);
         this.scene.add(this.robot);
 

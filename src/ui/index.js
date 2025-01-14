@@ -11,24 +11,16 @@ plotter.start();
 
 ipcRenderer.on("pos", (event, pos) => {
     console.log("pos", pos)
-    // scene.robot.position.x = pos[0]; // -
-    // scene.robot.position.y = pos[1]; // -
-    // scene.robot.position.z = pos[2];
+    scene.robot.position.x = pos[0]; // -
+    scene.robot.position.y = pos[1]; // -
+    scene.robot.position.z = pos[2];
     scene.moveBot(pos);
 });
 
-ipcRenderer.on("prepos", (event, pos) => {
-    console.log("prepos", pos)
-    scene.prerobot.position.x = pos[0];
-    scene.prerobot.position.y = pos[1];
-    scene.prerobot.position.z = pos[2];
-});
-
-
 ipcRenderer.on("rot", (event, rot) => {
-    // scene.robot.rotation.x = rot[0];
-    // scene.robot.rotation.y = rot[1]; // -
-    // scene.robot.rotation.z = rot[2];
+    scene.robot.rotation.x = rot[0];
+    scene.robot.rotation.y = rot[1]; // -
+    scene.robot.rotation.z = rot[2];
     scene.rotateBot(rot);
 });
 
