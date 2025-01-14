@@ -78,10 +78,17 @@ export class Scene {
             const tagGeom = new THREE.BoxGeometry(0.2159, 0.2794, 0.01);
             const tagMat = new THREE.MeshBasicMaterial({map: textureLoader.load(`apriltags/${tag.ID}.png`)});
             const tagMesh = new THREE.Mesh(tagGeom, [defaultMat, defaultMat, defaultMat, defaultMat, tagMat, defaultMat]);
-        
             let qm = new THREE.Quaternion();
             let ninety = Math.PI/2; 
             
+            // EXPLANATION OF QUATERNION TRANSFORMATIONS
+            // First, I input the quaternions in (x, y, z, w), as that's the way 
+            // that three.js takes quaternions. Then I rotated it -90 degrees 
+            // about the X-axis and flipped the Y-axis. Following that, I 
+            // realized that the rotations were still incorrect, so I had to do 
+            // a 90 degree rotation clockwise around the X-axis and a 90 degree 
+            // rotation clockwise around the Y-axis. 
+
             tagMesh.quaternion.set(tag.pose.rotation.quaternion.X, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.W);
             // tagMesh.quaternion.set(tag.pose.rotation.quaternion.X, -tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.W);
             // tagMesh.quaternion.set(tag.pose.rotation.quaternion.W, -tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.X);
