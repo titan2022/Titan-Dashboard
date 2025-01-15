@@ -33,7 +33,7 @@ window.onload = () => {
         });
         
         scene.enabled = true;
-        alert(`saved to /cameraOutput/XYZ(${robotX},${robotY},${robotZ}),Rot(${robotRotX},${robotRotY},${robotRotZ}).png`)
+        alert(`saved to ${__dirname}/cameraOutput/XYZ(${robotX},${robotY},${robotZ}),Rot(${robotRotX},${robotRotY},${robotRotZ}).png`)
     })
 }
 
