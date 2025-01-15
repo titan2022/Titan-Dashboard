@@ -14,6 +14,7 @@ export class Scene {
         this.renderer;
         this.resizeListener;
         this.tags = [];
+        this.cameraObjs = [];
         this.enabled = true;
     }
 
@@ -65,6 +66,28 @@ export class Scene {
             const robotMat = new THREE.MeshBasicMaterial({color: 0xffff00});
             this.robot = new THREE.Mesh(robotGeom, robotMat);
             this.scene.add(this.robot);
+
+            const robotTargetGeom = new THREE.BoxGeometry(0.05, 0.05, 0.2);
+            const robotTargetMat = new THREE.MeshBasicMaterial({color: 0xff0000});
+            const robotTarget = new THREE.Mesh(robotTargetGeom, robotTargetMat);
+            this.scene.add(robotTarget);
+
+            robotTarget.position.set(-2.143990141519472, 0.5344550747203898, -1.5007918547681542);
+            robotTarget.rotation.set(0, 120.0 * (Math.PI / 180.0), 0);
+
+            // robotTarget.position.set(-2.5330356831240692, 0.28568760646473246, 1.1402842607174104);
+            // robotTarget.rotation.set(0, 30.0 * (Math.PI / 180.0), 0);
+
+            this.cameras.forEach(cam => {
+                const camGeom = new THREE.BoxGeometry(0.06, 0.06, 0.02);
+                const camMat = new THREE.MeshBasicMaterial({color: 0xff00ff});
+                const camMesh = new THREE.Mesh(camGeom, camMat);
+                camMesh.position.set(cam.position[0], cam.position[1], cam.position[2]);
+                let newRot = this.toRad(cam.rotation);
+                camMesh.rotation.set(newRot[0], newRot[1], newRot[2]);
+                this.cameraObjs.push(camMesh);
+                this.robot.add(this.cameraObjs.at(-1));
+            });
         }
 
         // XYZ in corner
@@ -158,5 +181,23 @@ export class Scene {
         this.camera.rotation.z = z;
         this.camera.rotation.y = y;
         this.camera.rotation.x = x;
+    }
+
+    moveBot = (pos) => {
+        // Robot position
+        this.robot.position.x = pos[0]; // -
+        this.robot.position.y = pos[1]; // -
+        this.robot.position.z = pos[2];
+
+        // Camera positions
+    }
+
+    rotateBot = (rot) => {
+        // Robot rotation
+        this.robot.rotation.x = rot[0];
+        this.robot.rotation.y = rot[1]; // -
+        this.robot.rotation.z = rot[2];
+
+        // Camera rotations
     }
 }
