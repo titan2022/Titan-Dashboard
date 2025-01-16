@@ -102,7 +102,7 @@ export class Scene {
         this.apriltags.tags.forEach(tag => {
 
             // Tag mesh
-            const tagGeom = new THREE.BoxGeometry(0.2159, 0.2794, 0.01);
+            const tagGeom = new THREE.BoxGeometry(0.2159, 0.2794, 0.01); // Letter paper size
             const tagMat = new THREE.MeshBasicMaterial({map: textureLoader.load(`apriltags/${tag.ID}.png`)});
             const tagMesh = new THREE.Mesh(tagGeom, [defaultMat, defaultMat, defaultMat, defaultMat, tagMat, defaultMat]);
             let qm = new THREE.Quaternion();
@@ -142,20 +142,6 @@ export class Scene {
             
             this.tags.push(tagMesh);
             this.scene.add(this.tags.at(-1));
-
-            // Normal visualization
-            if (this.config["debugEnableTagNormals"]) {
-                const tagNormalGeom = new THREE.BoxGeometry(0.005, 0.005, 0.2);
-                const tagNormalMat = new THREE.MeshBasicMaterial({color: 0xffff00});
-                const tagNormalMesh = new THREE.Mesh(tagNormalGeom, tagNormalMat);
-
-                tagNormalMesh.position.set(0, 0, 0.1);
-                tagNormalMesh.position.applyEuler(new THREE.Euler(newRot[0], newRot[1], newRot[2], "XYZ"));
-                tagNormalMesh.position.add(new THREE.Vector3(tag.position[0], tag.position[1], tag.position[2]));
-                tagNormalMesh.rotation.set(newRot[0], newRot[1], newRot[2]);
-
-                this.scene.add(tagNormalMesh);
-            }
         });
 
         // Starting camera position
@@ -180,17 +166,28 @@ export class Scene {
         }
     }
 
-    setCamPos = (x=0,y=0,z=0) => {
-        this.camera.position.x = x;
-        this.camera.position.z = z;
-        this.camera.position.y = y;
-        
+    setCameraPose = (pos, rot, cam) => {
+        let pose = this.robotToCameraPose(pos, rot, cam);
+        this.camera.position.set(...pose[0]);
+        this.camera.rotation.set(...pose[1]);
     }
 
-    setCamRot = (x=0,y=0,z=0) => {
-        this.camera.rotation.z = z;
-        this.camera.rotation.y = y;
-        this.camera.rotation.x = x;
+    robotToCameraPose = (pos, rot, cam) => {
+        let camPos = new THREE.Vector3();
+        let camRot = new THREE.Euler();
+
+        // Rotate by robot rotation
+        camPos.set(...cam.position);
+        let newRot = this.toRad(rot);
+        camPos.applyEuler(new THREE.Euler(...newRot, "XYZ"));
+        
+        // Offset by robot position
+        camPos.add(new THREE.Vector3(...pos));
+
+        // Set camera orientation
+        camRot.set(...cam.rotation);
+
+        return [pos, rot];
     }
 
     moveBot = (pos) => {

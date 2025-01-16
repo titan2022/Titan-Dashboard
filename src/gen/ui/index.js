@@ -22,8 +22,10 @@ const yRatio = (xRatio+zRatio)/2;
 
 window.onload = () => {
     const cam = config.cameras[0];
-    scene.setCamPos(xRatio*(robotX+cam.position[0]),yRatio*(robotY+cam.position[1])+0.05,zRatio*(robotZ+cam.position[2]));
-    scene.setCamRot(scene.toRadSingle(robotRotX+cam.rotation[0]),scene.toRadSingle(robotRotY+cam.rotation[1]),scene.toRadSingle(robotRotZ+cam.rotation[2]));
+    const robotPosition = [robotX, robotY, robotZ];
+    const robotRotation = [robotRotX, robotRotY, robotRotZ];
+
+    scene.setCameraPose(robotPosition, scene.toRad(robotRotation), cam);
 
     document.getElementById("capture").addEventListener("click", () => {
         scene.enabled = false;
