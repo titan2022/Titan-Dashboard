@@ -54,14 +54,14 @@ export class Scene {
         this.scene.add(fieldMesh);
 
         // Orbit camera
-        if (enableOrbitControls){
+        if (enableOrbitControls) {
             this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         } else {
             this.controls = null;
         }
 
         // Robot object
-        if (this.controls){
+        if (this.controls) {
             const robotGeom = new THREE.BoxGeometry(0.5, 0.5, 0.2);
             const robotMat = new THREE.MeshBasicMaterial({color: 0xffff00});
             this.robot = new THREE.Mesh(robotGeom, robotMat);
@@ -135,8 +135,10 @@ export class Scene {
 
             tagMesh.position.set(tag.pose.translation.x-apriltags.field.length/2, tag.pose.translation.z, -(tag.pose.translation.y-apriltags.field.width/2));
             
-            var axesHelper = new THREE.AxesHelper( 0.25 );
-            tagMesh.add( axesHelper );
+            if (this.controls) {
+                var axesHelper = new THREE.AxesHelper( 0.25 );
+                tagMesh.add( axesHelper );
+            }
             
             this.tags.push(tagMesh);
             this.scene.add(this.tags.at(-1));
