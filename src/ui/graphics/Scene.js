@@ -88,6 +88,10 @@ export class Scene {
                 this.cameraObjs.push(camMesh);
                 this.robot.add(this.cameraObjs.at(-1));
             });
+
+            // Add axes helper to robot
+            var axesHelper = new THREE.AxesHelper( 3 );
+            this.robot.add( axesHelper );
         }
 
         // XYZ in corner
@@ -130,6 +134,10 @@ export class Scene {
             tagMesh.quaternion.multiply(rotationQuat);
 
             tagMesh.position.set(tag.pose.translation.x-apriltags.field.length/2, tag.pose.translation.z, -(tag.pose.translation.y-apriltags.field.width/2));
+            
+            var axesHelper = new THREE.AxesHelper( 0.25 );
+            tagMesh.add( axesHelper );
+            
             this.tags.push(tagMesh);
             this.scene.add(this.tags.at(-1));
 
