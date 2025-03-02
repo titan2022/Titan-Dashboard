@@ -52,7 +52,7 @@ export class Scene {
         const fieldGeom = new THREE.BoxGeometry(22.5552, 0.1, 9.144);
         const fieldMat = new THREE.MeshBasicMaterial({map: textureLoader.load("field.png")});
         const fieldMesh = new THREE.Mesh(fieldGeom, [defaultMat, defaultMat, fieldMat, defaultMat, defaultMat, defaultMat]);
-        fieldMesh.position.set(0, -0.05, 0);
+        fieldMesh.position.set(apriltags.field.width/2, -0.05, apriltags.field.length/2);
         const rotationQuat = new THREE.Quaternion();
         rotationQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), NINETY*3); 
         fieldMesh.quaternion.multiply(rotationQuat);
@@ -111,38 +111,14 @@ export class Scene {
             const tagMat = new THREE.MeshBasicMaterial({map: textureLoader.load(`apriltags/${tag.ID}.png`)});
             const tagMesh = new THREE.Mesh(tagGeom, [defaultMat, defaultMat, defaultMat, defaultMat, tagMat, defaultMat]);
             
-            // EXPLANATION OF QUATERNION TRANSFORMATIONS
-            // First, I input the quaternions in (x, y, z, w), as that's the way 
-            // that three.js takes quaternions. Then I rotated it -90 degrees 
-            // about the X-axis and flipped the Y-axis. Following that, I 
-            // realized that the rotations were still incorrect, so I had to do 
-            // a 90 degree rotation clockwise around the X-axis and a 90 degree 
-            // rotation clockwise around the Y-axis. 
+            const extrinsicRotation = new THREE.Euler();
+            extrinsicRotation.setFromQuaternion(new THREE.Quaternion(tag.pose.rotation.quaternion.X, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.W));
 
-            // tagMesh.quaternion.set(tag.pose.rotation.quaternion.X, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.W);
-            // // tagMesh.quaternion.set(tag.pose.rotation.quaternion.X, -tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.W);
-            // // tagMesh.quaternion.set(tag.pose.rotation.quaternion.W, -tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.X);
-            // tagMesh.quaternion.normalize();
-        
-            // const rotationQuat = new THREE.Quaternion();
-            // rotationQuat.setFromAxisAngle(new THREE.Vector3(1, 0, 0), NINETY*3); 
-            // tagMesh.quaternion.multiply(rotationQuat);
+            const intrinsicRotation = new THREE.Quaternion();
+            intrinsicRotation.setFromEuler(new THREE.Euler(extrinsicRotation.x, extrinsicRotation.y, extrinsicRotation.z));
 
-            // tagMesh.quaternion.y = -tagMesh.quaternion.y;
-
-            // rotationQuat.setFromAxisAngle(new THREE.Vector3(1, 0, 0), NINETY); 
-            // tagMesh.quaternion.multiply(rotationQuat);
-
-            // rotationQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), NINETY); 
-            // tagMesh.quaternion.multiply(rotationQuat);
-
-            // rotationQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), NINETY*3); 
-            // tagMesh.quaternion.multiply(rotationQuat);
-
-            // tagMesh.position.set(tag.pose.translation.x-apriltags.field.length/2, tag.pose.translation.z, -(tag.pose.translation.y-apriltags.field.width/2));
-            
-            tagMesh.quaternion.set(tag.pose.rotation.quaternion.X, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.W);
-            tagMesh.position.set(tag.pose.translation.x, tag.pose.translation.y, tag.pose.translation.y);
+            tagMesh.quaternion.set(intrinsicRotation.x, intrinsicRotation.y, intrinsicRotation.z, intrinsicRotation.w);
+            tagMesh.position.set(tag.pose.translation.x, tag.pose.translation.y, tag.pose.translation.z);
 
 
             if (this.controls) {
