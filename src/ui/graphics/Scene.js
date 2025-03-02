@@ -27,6 +27,8 @@ export class Scene {
     }
     
     init(enableOrbitControls = true) {
+        const NINETY = Math.PI/2; 
+
         const canvas = document.getElementById("canvas");
 
         // default material
@@ -51,6 +53,9 @@ export class Scene {
         const fieldMat = new THREE.MeshBasicMaterial({map: textureLoader.load("field.png")});
         const fieldMesh = new THREE.Mesh(fieldGeom, [defaultMat, defaultMat, fieldMat, defaultMat, defaultMat, defaultMat]);
         fieldMesh.position.set(0, -0.05, 0);
+        const rotationQuat = new THREE.Quaternion();
+        rotationQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), NINETY*3); 
+        fieldMesh.quaternion.multiply(rotationQuat);
         this.scene.add(fieldMesh);
 
         // Orbit camera
@@ -105,8 +110,6 @@ export class Scene {
             const tagGeom = new THREE.BoxGeometry(0.2159, 0.2794, 0.01); // Letter paper size
             const tagMat = new THREE.MeshBasicMaterial({map: textureLoader.load(`apriltags/${tag.ID}.png`)});
             const tagMesh = new THREE.Mesh(tagGeom, [defaultMat, defaultMat, defaultMat, defaultMat, tagMat, defaultMat]);
-            let qm = new THREE.Quaternion();
-            let ninety = Math.PI/2; 
             
             // EXPLANATION OF QUATERNION TRANSFORMATIONS
             // First, I input the quaternions in (x, y, z, w), as that's the way 
@@ -116,25 +119,32 @@ export class Scene {
             // a 90 degree rotation clockwise around the X-axis and a 90 degree 
             // rotation clockwise around the Y-axis. 
 
-            tagMesh.quaternion.set(tag.pose.rotation.quaternion.X, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.W);
-            // tagMesh.quaternion.set(tag.pose.rotation.quaternion.X, -tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.W);
-            // tagMesh.quaternion.set(tag.pose.rotation.quaternion.W, -tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.X);
-            tagMesh.quaternion.normalize();
+            // tagMesh.quaternion.set(tag.pose.rotation.quaternion.X, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.W);
+            // // tagMesh.quaternion.set(tag.pose.rotation.quaternion.X, -tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.W);
+            // // tagMesh.quaternion.set(tag.pose.rotation.quaternion.W, -tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.X);
+            // tagMesh.quaternion.normalize();
         
-            const rotationQuat = new THREE.Quaternion();
-            rotationQuat.setFromAxisAngle(new THREE.Vector3(1, 0, 0), ninety*3); 
-            tagMesh.quaternion.multiply(rotationQuat);
+            // const rotationQuat = new THREE.Quaternion();
+            // rotationQuat.setFromAxisAngle(new THREE.Vector3(1, 0, 0), NINETY*3); 
+            // tagMesh.quaternion.multiply(rotationQuat);
 
-            tagMesh.quaternion.y = -tagMesh.quaternion.y;
+            // tagMesh.quaternion.y = -tagMesh.quaternion.y;
 
-            rotationQuat.setFromAxisAngle(new THREE.Vector3(1, 0, 0), ninety); 
-            tagMesh.quaternion.multiply(rotationQuat);
+            // rotationQuat.setFromAxisAngle(new THREE.Vector3(1, 0, 0), NINETY); 
+            // tagMesh.quaternion.multiply(rotationQuat);
 
-            rotationQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), ninety); 
-            tagMesh.quaternion.multiply(rotationQuat);
+            // rotationQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), NINETY); 
+            // tagMesh.quaternion.multiply(rotationQuat);
 
-            tagMesh.position.set(tag.pose.translation.x-apriltags.field.length/2, tag.pose.translation.z, -(tag.pose.translation.y-apriltags.field.width/2));
+            // rotationQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), NINETY*3); 
+            // tagMesh.quaternion.multiply(rotationQuat);
+
+            // tagMesh.position.set(tag.pose.translation.x-apriltags.field.length/2, tag.pose.translation.z, -(tag.pose.translation.y-apriltags.field.width/2));
             
+            tagMesh.quaternion.set(tag.pose.rotation.quaternion.X, tag.pose.rotation.quaternion.Y, tag.pose.rotation.quaternion.Z, tag.pose.rotation.quaternion.W);
+            tagMesh.position.set(tag.pose.translation.x, tag.pose.translation.y, tag.pose.translation.y);
+
+
             if (this.controls) {
                 var axesHelper = new THREE.AxesHelper( 0.25 );
                 tagMesh.add( axesHelper );
